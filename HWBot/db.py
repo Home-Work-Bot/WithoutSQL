@@ -5,8 +5,7 @@ USERS = {
 {
     "currentChat"   :(-1002101105264, "sdkfksadfkjdslakfjkdsjflkdsajfjl"),
     "allChats"      :[(-1002101105264, "sdkfksadfkjdslakfjkdsjflkdsajfjl")]
-},
-(None, None): 1
+}
 }
 CHATS = {
 (-1002101105264, "sdkfksadfkjdslakfjkdsjflkdsajfjl"):
@@ -21,6 +20,7 @@ CHATS = {
 
                 
                 ),    #(id, subject->lastMessageId)
+                
     #"last":     {"matAnalisys"  : None,
     #            "linearAlgebra" : None}
 
@@ -46,7 +46,7 @@ def getSubjects(chatId: int)->[str]:
             return CHATS[c]["subjects"]
     return None
 
-def updatePin(chatId: int, pinId: int, name: str, newText):
+def updatePin(chatId: int, name: str, newText):
     for c in CHATS:
         if c[0] == chatId:
             CHATS[c]["pinned"][name] = newText
@@ -57,6 +57,12 @@ def updateLast(chatId: int, subjectName: str, newLastId:int):
     for c in CHATS:
         if c[0] == chatId:
             CHATS[c]["pinned"][subjectName] = newLastId
+def ParsePinned(chatId: int):
+    res = "<b>Hometasks</b>\n\n"
+    for c in CHATS:
+        if c[0] == chatId:
+            for s in getSubjects(chatId):
+                CHAT
 
 if __name__ == "__main__":
     userExist(1)
