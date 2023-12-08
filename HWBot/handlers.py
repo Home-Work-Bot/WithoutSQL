@@ -38,9 +38,35 @@ async def newPin_handler(msg: Message):
 from createMessage import addMaterials
 @router.message(Command("addMaterials"))
 async def addMaterials_handler(msg: Message):
-    await addMaterials(db.currentUserChatId(msg.from_user.id), "linearAlgebra", msg.date, msg)
-
+    res = "Выберите предмет:\n"
+    for s in db.getSubjects(db.currentUserChatId(msg.from_user.id)):
+        res += '/' + s + '\n'
+    await msg.answer(res)
+    #await addMaterials(db.currentUserChatId(msg.from_user.id), "linearAlgebra", msg.date, msg)
 @router.message(Command("test"))
 async def start_handler(msg: Message):
     pass
     #bot.forward_message()
+
+
+SUBJECT = ""
+STATE = False
+from createMessage import addMaterials
+@router.message(F.text.regexp(r"/.*").group(0).as_("text"))
+async def addSubject_handler(msg: Message, text:str):
+    SUBJECT = text.replace("@h0me_w0rk_bot", "")[1:]
+    STATE = True
+    print(SUBJECT)
+    #await addMaterials(db.currentUserChatId(msg.from_user.id), "linearAlgebra", msg.date, msg)
+
+@router.message()
+async def getFile_handler(msg: Message):
+    #await msg.answer("Catch")
+    global STATE, SUBJECT
+    print("HHHHHHHHHHHHHHHHHHHHHHHHHH")
+    print(SUBJECT)
+    print(STATE)
+    if STATE:
+        print("HHHHHHHHHHHHHHHHHHHHHHHHHH")
+        await addMaterials(db.currentUserChatId(msg.from_user.id), SUBJECT, msg.date, msg)
+        STATE = False
