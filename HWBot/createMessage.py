@@ -29,7 +29,7 @@ async def addMaterials(chatId:int, subj:str, date, data:Message):
                                   parse_mode="HTML")
     db.updatePin(chatId, subj, last.message_id)
     await editPin(chatId)
-    print("FORWARD")
+    #print("FORWARD")
     await bot.forward_message(chatId, data.from_user.id, data.message_id)
 
 async def editPin(chatId: int):

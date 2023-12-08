@@ -4,6 +4,8 @@ from aiogram.filters import Command
 import aiogram.methods.get_chat
 import db
 
+from aiogram.fsm.context import FSMContext
+from aiogram.fsm.state import State, StatesGroup
 
 router = Router()
 
@@ -49,24 +51,25 @@ async def start_handler(msg: Message):
     #bot.forward_message()
 
 
-SUBJECT = ""
-STATE = False
+# SUBJECT = ""
+# STATE = False
 from createMessage import addMaterials
 @router.message(F.text.regexp(r"/.*").group(0).as_("text"))
-async def addSubject_handler(msg: Message, text:str):
-    SUBJECT = text.replace("@h0me_w0rk_bot", "")[1:]
-    STATE = True
-    print(SUBJECT)
+async def addSubject_handler(msg: Message, text:str, state: FSMContext):
+    await state.set_state(Form.waitDocument)
+    Form.SUBJECT = text.replace("@h0me_w0rk_bot", "")[1:]
+    #SUBJECT = 
+    print(Form.SUBJECT)
     #await addMaterials(db.currentUserChatId(msg.from_user.id), "linearAlgebra", msg.date, msg)
 
-@router.message()
+class Form(StatesGroup):
+    waitDocument = State()
+    SUBJECT = ""
+
+@router.message(Form.waitDocument)
 async def getFile_handler(msg: Message):
     #await msg.answer("Catch")
-    global STATE, SUBJECT
     print("HHHHHHHHHHHHHHHHHHHHHHHHHH")
-    print(SUBJECT)
-    print(STATE)
-    if STATE:
-        print("HHHHHHHHHHHHHHHHHHHHHHHHHH")
-        await addMaterials(db.currentUserChatId(msg.from_user.id), SUBJECT, msg.date, msg)
-        STATE = False
+    print(Form.SUBJECT)
+    print("HHHHHHHHHHHHHHHHHHHHHHHHHH")
+    await addMaterials(db.currentUserChatId(msg.from_user.id), Form.SUBJECT, msg.date, msg)
